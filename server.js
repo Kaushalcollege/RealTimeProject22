@@ -7,7 +7,7 @@ const cors = require("cors");
 
 const app = express();
 
-// 🔥 Enable CORS for frontend
+//Enable CORS for frontend
 app.use(cors({
     origin: "http://localhost:63342",
     methods: "GET,POST",
@@ -54,7 +54,7 @@ app.post("/collectData", async (req, res) => {
         loginAttempts[clientIp].lastAttempt = Date.now();
 
         if (loginAttempts[clientIp].count > 5 && timeSinceLastAttempt < 5000) {
-            console.log(`🚨 Bot detected from IP: ${clientIp}`);
+            console.log(`Bot detected from IP: ${clientIp}`);
             return res.status(403).json({ error: "Login Unsuccessful. Bot detected!" });
         }
 
@@ -75,14 +75,14 @@ app.post("/collectData", async (req, res) => {
             "Device Type": agent.device.family || "Other"
         };
 
-        console.log("📤 Sending Data to Flask Model:", requestData);
+        console.log("Sending Data to Flask Model:", requestData);
 
         // Send request to Flask model
         const flaskResponse = await axios.post("http://127.0.0.1:5000/predict", requestData, {
             headers: { "Content-Type": "application/json" }
         });
 
-        console.log("✅ Flask Prediction:", flaskResponse.data);
+        console.log("Flask Prediction:", flaskResponse.data);
 
         // If the model predicts account takeover, block the login
         if (flaskResponse.data["Is Account Takeover"] === 1) {
@@ -92,12 +92,12 @@ app.post("/collectData", async (req, res) => {
         res.json({ message: "Login successful!" });
 
     } catch (error) {
-        console.error("❌ Error:", error.message);
+        console.error("Error:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
 // Start the server
 app.listen(3001, () => {
-    console.log("🚀 Server is running on http://localhost:3001");
+    console.log("Server is running on http://localhost:3001");
 });
